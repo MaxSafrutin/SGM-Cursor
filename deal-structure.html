@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SGM Auto Group — Структура сделки</title>
+
+    <!-- Fonts: Jost (Bold for headings, Light for text) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@300;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg: #070707;
+        --text: #ffffff;
+        --muted: rgba(255, 255, 255, 0.72);
+        --hairline: rgba(255, 255, 255, 0.10);
+
+        --accent-1: #5f2b26;
+        --accent-2: #fff5e2;
+        --accent: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-1));
+
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+        --radius: 18px;
+        --font: "Jost", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+        --nav-h: 86px; /* fixed bottom navigation height */
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow: hidden; /* presentation mode */
+      }
+
+      /* Premium background without images */
+      .bg {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(900px 420px at 50% 10%, rgba(255, 245, 226, 0.10), transparent 60%),
+          radial-gradient(700px 420px at 14% 88%, rgba(95, 43, 38, 0.16), transparent 55%),
+          radial-gradient(900px 520px at 92% 92%, rgba(208, 158, 86, 0.08), transparent 58%);
+        opacity: 0.95;
+      }
+
+      .topline {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          #5f2b26,
+          #94532c,
+          #d09e56,
+          #fff5e2,
+          #dcbb95,
+          #a05a1f
+        );
+        opacity: 0.9;
+      }
+
+      /* Stage: centers one slide (one thought) */
+      .stage {
+        position: relative;
+        height: 100%;
+        padding: 24px 18px calc(var(--nav-h) + 18px);
+        display: grid;
+        place-items: center;
+      }
+
+      .slide {
+        width: min(980px, 100%);
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.02);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+
+        /* transition between slides */
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 240ms ease, transform 240ms ease;
+      }
+
+      .slide.is-active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .slide__inner {
+        padding: 42px 36px 36px;
+      }
+
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.14);
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 12px;
+        font-weight: 300;
+      }
+
+      .kicker__dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--accent);
+      }
+
+      h1 {
+        margin: 16px 0 10px;
+        font-size: clamp(30px, 4.2vw, 56px);
+        letter-spacing: -0.02em;
+        font-weight: 700;
+      }
+
+      .text {
+        margin: 0;
+        font-weight: 300;
+        color: var(--muted);
+        font-size: clamp(14px, 1.55vw, 18px);
+        line-height: 1.55;
+        max-width: 62ch;
+      }
+
+      /* Fade-in for content inside a slide */
+      @keyframes riseFade {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .slide.is-active .kicker,
+      .slide.is-active h1,
+      .slide.is-active .text {
+        animation: riseFade 420ms ease both;
+      }
+      .slide.is-active h1 {
+        animation-delay: 40ms;
+      }
+      .slide.is-active .text {
+        animation-delay: 80ms;
+      }
+
+      /* Fixed bottom navigation */
+      .nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: var(--nav-h);
+        display: grid;
+        place-items: center;
+        padding: 14px 18px;
+        background: linear-gradient(to top, rgba(7, 7, 7, 0.94), rgba(7, 7, 7, 0.65));
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+      }
+
+      .nav__bar {
+        width: min(980px, 100%);
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .nav__left,
+      .nav__center,
+      .nav__right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .nav__left {
+        justify-content: flex-start;
+      }
+      .nav__center {
+        justify-content: center;
+      }
+      .nav__right {
+        justify-content: flex-end;
+      }
+
+      .btn {
+        appearance: none;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text);
+        border-radius: 14px;
+        padding: 12px 14px;
+        font-family: var(--font);
+        font-weight: 300;
+        font-size: 14px;
+        line-height: 1;
+        cursor: pointer;
+        transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, opacity 160ms ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        border-color: rgba(255, 245, 226, 0.26);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn--accent {
+        border: 1px solid rgba(255, 245, 226, 0.28);
+        background: linear-gradient(90deg, rgba(95, 43, 38, 0.22), rgba(255, 245, 226, 0.10), rgba(95, 43, 38, 0.22));
+      }
+
+      .counter {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.70);
+        font-weight: 300;
+        letter-spacing: 0.02em;
+        user-select: none;
+      }
+
+      a.link {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      @media (max-width: 720px) {
+        :root {
+          --nav-h: 94px;
+        }
+        .slide__inner {
+          padding: 30px 18px 22px;
+        }
+        .nav__bar {
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: auto auto;
+        }
+        .nav__center {
+          order: 3;
+          grid-column: 1 / -1;
+          justify-content: space-between;
+        }
+        .btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .slide {
+          transition: none;
+        }
+        .btn {
+          transition: none;
+        }
+        .slide.is-active .kicker,
+        .slide.is-active h1,
+        .slide.is-active .text {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="bg" aria-hidden="true"></div>
+    <div class="topline" aria-hidden="true"></div>
+
+    <main class="stage" aria-label="Презентация: структура сделки">
+      <!-- Slide container: content is injected via JS -->
+      <section class="slide" id="slide" aria-live="polite">
+        <div class="slide__inner">
+          <div class="kicker" id="kicker"><span class="kicker__dot" aria-hidden="true"></span><span>Раздел</span></div>
+          <h1 id="title">Заголовок</h1>
+          <p class="text" id="body">Текст</p>
+        </div>
+      </section>
+    </main>
+
+    <nav class="nav" aria-label="Навигация по слайдам">
+      <div class="nav__bar">
+        <div class="nav__left">
+          <button class="btn" id="btnBack" type="button">Назад</button>
+        </div>
+
+        <div class="nav__right">
+          <a class="btn link" href="./index.html">На главную</a>
+        </div>
+
+        <div class="nav__center">
+          <div class="counter" id="counter">1 / 1</div>
+          <button class="btn btn--accent" id="btnNext" type="button">Далее</button>
+        </div>
+      </div>
+    </nav>
+
+    <script>
+      /*
+        Presentation engine (no libraries):
+        - slides is a plain array
+        - index controls current slide
+        - showSlide(index) renders one "thought" per screen
+        - supports deep-linking via #s= (e.g., deal-structure.html#s=3)
+      */
+
+      const SECTION_TITLE = "Структура сделки"; // displayed in kicker (can be reused across slides)
+
+      // IMPORTANT: text placeholders only — keep as-is (architecture > content)
+      const slides = [
+        { title: "Слайд 1 — Заглушка", body: "Текст-заглушка. Одна мысль на экран." },
+        { title: "Слайд 2 — Заглушка", body: "Текст-заглушка. Одна мысль на экран." },
+        { title: "Слайд 3 — Заглушка", body: "Текст-заглушка. Одна мысль на экран." },
+        { title: "Слайд 4 — Заглушка", body: "Текст-заглушка. Одна мысль на экран." }
+      ];
+
+      const els = {
+        slide: document.getElementById("slide"),
+        kicker: document.getElementById("kicker"),
+        title: document.getElementById("title"),
+        body: document.getElementById("body"),
+        counter: document.getElementById("counter"),
+        back: document.getElementById("btnBack"),
+        next: document.getElementById("btnNext")
+      };
+
+      let currentIndex = 0;
+
+      function clamp(n, min, max) {
+        return Math.min(max, Math.max(min, n));
+      }
+
+      function parseIndexFromHash() {
+        // hash format: #s=1 (1-based for humans)
+        const hash = window.location.hash || "";
+        const match = hash.match(/s=(\d+)/);
+        if (!match) return 0;
+        const oneBased = Number(match[1]);
+        if (!Number.isFinite(oneBased)) return 0;
+        return clamp(oneBased - 1, 0, slides.length - 1);
+      }
+
+      function setHashFromIndex(i) {
+        const oneBased = i + 1;
+        const nextHash = `#s=${oneBased}`;
+        if (window.location.hash !== nextHash) window.location.hash = nextHash;
+      }
+
+      function setNavState(i) {
+        els.back.disabled = i <= 0;
+        els.next.disabled = i >= slides.length - 1;
+        els.counter.textContent = `${i + 1} / ${slides.length}`;
+      }
+
+      function showSlide(i) {
+        currentIndex = clamp(i, 0, slides.length - 1);
+        const s = slides[currentIndex];
+
+        // start transition
+        els.slide.classList.remove("is-active");
+
+        // swap content on next frame so opacity transition reads cleanly
+        requestAnimationFrame(() => {
+          els.kicker.lastElementChild.textContent = SECTION_TITLE;
+          els.title.textContent = s.title;
+          els.body.textContent = s.body;
+
+          setNavState(currentIndex);
+          setHashFromIndex(currentIndex);
+
+          requestAnimationFrame(() => els.slide.classList.add("is-active"));
+        });
+      }
+
+      function go(delta) {
+        showSlide(currentIndex + delta);
+      }
+
+      // Buttons
+      els.back.addEventListener("click", () => go(-1));
+      els.next.addEventListener("click", () => go(1));
+
+      // Keyboard navigation (presentation-friendly)
+      window.addEventListener("keydown", (e) => {
+        if (e.altKey || e.ctrlKey || e.metaKey) return;
+        if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") {
+          e.preventDefault();
+          go(1);
+        }
+        if (e.key === "ArrowLeft" || e.key === "PageUp") {
+          e.preventDefault();
+          go(-1);
+        }
+        if (e.key === "Home") {
+          e.preventDefault();
+          showSlide(0);
+        }
+        if (e.key === "End") {
+          e.preventDefault();
+          showSlide(slides.length - 1);
+        }
+      });
+
+      // Deep-link support: manual hash change updates slide
+      window.addEventListener("hashchange", () => {
+        const idx = parseIndexFromHash();
+        if (idx !== currentIndex) showSlide(idx);
+      });
+
+      // Init
+      showSlide(parseIndexFromHash());
+    </script>
+  </body>
+</html>
+

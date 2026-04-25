@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SGM Auto Group — презентация</title>
+
+    <!-- Fonts: Jost (Bold for headings, Light for text) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@300;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg: #070707;
+        --text: #ffffff;
+        --muted: rgba(255, 255, 255, 0.72);
+        --hairline: rgba(255, 255, 255, 0.08);
+
+        --accent-1: #5f2b26;
+        --accent-2: #fff5e2;
+        --accent: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-1));
+
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+        --radius: 18px;
+
+        --font: "Jost", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Subtle premium background without images */
+      .bg {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(900px 420px at 50% 12%, rgba(255, 245, 226, 0.10), transparent 60%),
+          radial-gradient(700px 420px at 12% 84%, rgba(95, 43, 38, 0.16), transparent 55%),
+          radial-gradient(900px 520px at 92% 90%, rgba(208, 158, 86, 0.08), transparent 58%);
+        opacity: 0.9;
+      }
+
+      .wrap {
+        min-height: 100%;
+        display: grid;
+        place-items: center;
+        padding: 28px 18px;
+      }
+
+      .card {
+        width: min(980px, 100%);
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.02);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .card__topline {
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          #5f2b26,
+          #94532c,
+          #d09e56,
+          #fff5e2,
+          #dcbb95,
+          #a05a1f
+        );
+      }
+
+      .card__body {
+        padding: 40px 36px 32px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        user-select: none;
+      }
+
+      .logo__mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--accent);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+      }
+
+      .logo__name {
+        display: grid;
+        line-height: 1.1;
+      }
+
+      .logo__name strong {
+        font-weight: 700;
+        letter-spacing: 0.3px;
+      }
+
+      .logo__name span {
+        font-weight: 300;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      h1 {
+        margin: 18px 0 8px;
+        font-size: clamp(30px, 4.2vw, 54px);
+        letter-spacing: -0.02em;
+        font-weight: 700;
+      }
+
+      p.lead {
+        margin: 0 0 28px;
+        font-weight: 300;
+        color: var(--muted);
+        font-size: clamp(14px, 1.55vw, 18px);
+        max-width: 56ch;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 14px;
+      }
+
+      .tile {
+        grid-column: span 6;
+        min-height: 112px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        background: rgba(255, 255, 255, 0.02);
+        padding: 18px 18px 16px;
+        text-decoration: none;
+        color: inherit;
+        display: grid;
+        gap: 10px;
+        transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+      }
+
+      .tile:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 245, 226, 0.22);
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .tile:active {
+        transform: translateY(0);
+      }
+
+      .tile__title {
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: -0.01em;
+      }
+
+      .tile__desc {
+        font-weight: 300;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.45;
+        max-width: 44ch;
+      }
+
+      .tile__meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 6px;
+        padding-top: 12px;
+        border-top: 1px solid var(--hairline);
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.14);
+      }
+
+      .chip__dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: var(--accent);
+      }
+
+      .arrow {
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.66);
+      }
+
+      @media (max-width: 720px) {
+        .card__body {
+          padding: 28px 18px 18px;
+        }
+        .tile {
+          grid-column: span 12;
+        }
+      }
+
+      /* Small fade-in on load */
+      @keyframes riseFade {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .card {
+        animation: riseFade 420ms ease both;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .card {
+          animation: none;
+        }
+        .tile {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="bg" aria-hidden="true"></div>
+
+    <main class="wrap">
+      <section class="card" aria-label="Меню презентаций">
+        <div class="card__topline" aria-hidden="true"></div>
+        <div class="card__body">
+          <div class="brand">
+            <!-- Logo: intentionally simple (no assets required for GitHub Pages) -->
+            <div class="logo" aria-label="SGM Auto Group">
+              <div class="logo__mark" aria-hidden="true"></div>
+              <div class="logo__name">
+                <strong>SGM Auto Group</strong>
+                <span>Импорт автомобилей • презентация</span>
+              </div>
+            </div>
+          </div>
+
+          <h1>Интерактивная презентация</h1>
+          <p class="lead">
+            Выберите раздел. Каждый раздел — это последовательность экранов (слайдов) с навигацией
+            «Назад / Далее / На главную».
+          </p>
+
+          <div class="grid" role="list">
+            <a class="tile" role="listitem" href="./deal-structure.html">
+              <div class="tile__title">Структура сделки</div>
+              <div class="tile__desc">Презентация: slide 1 → slide 2 → slide 3 → …</div>
+              <div class="tile__meta">
+                <span class="chip"><span class="chip__dot"></span>Готово</span>
+                <span class="arrow">Открыть →</span>
+              </div>
+            </a>
+
+            <!-- Placeholder for future sections (duplicate this tile and change href) -->
+            <a class="tile" role="listitem" href="#" aria-disabled="true" onclick="return false;">
+              <div class="tile__title">Новый раздел (скоро)</div>
+              <div class="tile__desc">Заглушка для будущей презентации. Добавится отдельной HTML-страницей.</div>
+              <div class="tile__meta">
+                <span class="chip"><span class="chip__dot"></span>Шаблон</span>
+                <span class="arrow">—</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+
